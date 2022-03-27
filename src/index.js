@@ -12,8 +12,16 @@ const port = 3000;
 
 app.use(express.static(publicDirectoryPath));
 
-io.on('connection', () => {
+let count = 0;
+
+io.on('connection', (socket) => {
   console.log('New Scoket connection established');
+  socket.emit('countUpdated', count);
+
+  socket.on('increment', () => {
+    count++;
+    io.emit('countUpdated', count);
+  });
 });
 
 server.listen(port, () => {
